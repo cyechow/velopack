@@ -89,6 +89,7 @@ public class CompatUtil
                 if (instr.OpCode.Code is CilCode.Call or CilCode.Callvirt or CilCode.Calli) {
                     var operand = instr.Operand as SerializedMemberReference;
                     if (operand != null) {
+                        _log.Info($"Checking operand name {operand.Name}, full name: {operand.DeclaringType.FullName}");
                         if (operand.Name == "Run" && operand.DeclaringType.FullName == "Velopack.VelopackApp") {
                             // success!
                             return method.FullName;
