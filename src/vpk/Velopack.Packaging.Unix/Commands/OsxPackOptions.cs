@@ -37,4 +37,5 @@ public class OsxPackOptions : OsxBundleOptions, IPackOptions
     public string Exclude { get; set; }
 
     public string CustomUrlProtocols { get; set; }
+    public string FileAssociations { get; set; }
 }

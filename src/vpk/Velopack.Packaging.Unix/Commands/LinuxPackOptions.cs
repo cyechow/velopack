@@ -39,4 +39,5 @@ public class LinuxPackOptions : IPackOptions
     public string Compression { get; set; }
 
     public string CustomUrlProtocols { get; set; }
+    public string FileAssociations { get; set; }
 }

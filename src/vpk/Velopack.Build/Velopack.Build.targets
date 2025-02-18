@@ -93,6 +93,7 @@
       Shortcuts="$(VelopackShortcuts)"
       Compression="$(VelopackAppImageCompression)"
       CustomUrlProtocols="$(VelopackCustomUrlProtocols)"
+      FileAssociations="$(VelopackFileAssociations)"
     />
   </Target>
 

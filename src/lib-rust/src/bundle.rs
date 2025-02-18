@@ -356,6 +356,8 @@ pub struct Manifest {
     pub release_notes: String,
     pub release_notes_html: String,
     pub custom_url_protocols: String,
+    pub file_associations: String,
+    pub icon_url: String,
 }
 
 /// Parse manifest object from an XML string.
@@ -406,6 +408,10 @@ pub fn read_manifest_from_string(xml: &str) -> Result<Manifest, Error> {
                     obj.release_notes_html = text;
                 } else if el_name == "customUrlProtocols" {
                     obj.custom_url_protocols = text;
+                } else if el_name == "fileAssociations" {
+                    obj.file_associations = text;
+                } else if el_name == "iconUrl" {
+                    obj.icon_url = text;
                 }
             }
             Ok(XmlEvent::EndElement { .. }) => {

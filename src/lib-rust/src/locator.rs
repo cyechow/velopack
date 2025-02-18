@@ -269,6 +269,18 @@ impl VelopackLocator {
             .collect()
     }
 
+    /// Returns the list of file extensions to associate with the application
+    pub fn get_file_associations(&self) -> Vec<String> {
+        self.manifest.file_associations.split(',')
+            .map(|s| s.trim().to_string())
+            .collect()
+    }
+
+    /// Returns the current app's icon url
+    pub fn get_icon_url(&self) -> String {
+        return self.manifest.icon_url.clone();
+    }
+
     /// Returns a copy of the current VelopackLocator with the manifest field set to the given manifest.
     pub fn clone_self_with_new_manifest(&self, manifest: &Manifest) -> VelopackLocator
     {

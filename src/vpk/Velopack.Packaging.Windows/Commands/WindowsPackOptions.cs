@@ -25,4 +25,5 @@ public class WindowsPackOptions : WindowsReleasifyOptions, INugetPackCommand, IP
     public string Shortcuts { get; set; }
 
     public string CustomUrlProtocols { get; set; }
+    public string FileAssociations { get; set; }
 }

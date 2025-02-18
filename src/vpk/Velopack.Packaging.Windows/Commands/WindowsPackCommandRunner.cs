@@ -44,6 +44,7 @@ public class WindowsPackCommandRunner : PackageBuilder<WindowsPackOptions>
         ExtraNuspecMetadata["shortcutLocations"] = GetShortcutLocations();
         ExtraNuspecMetadata["shortcutAmuid"] = CoreUtil.GetAppUserModelId(Options.PackId);
         ExtraNuspecMetadata["customUrlProtocols"] = GetCustomUrlProtocols();
+        ExtraNuspecMetadata["fileAssociations"] = GetFileAssociations();
 
         // copy files to temp dir, so we can modify them
         var dir = TempDir.CreateSubdirectory("PreprocessPackDirWin");
@@ -200,6 +201,29 @@ public class WindowsPackCommandRunner : PackageBuilder<WindowsPackOptions>
         } catch (Exception ex) {
             throw new UserInfoException(
                 $"Invalid custom url protocols '{Options.CustomUrlProtocols}'. " +
+                $"Error was {ex.Message}");
+        }
+    }
+    protected string GetFileAssociations()
+    {
+        if (String.IsNullOrWhiteSpace(Options.FileAssociations))
+            return null;
+
+        try {
+            var fileAssociations = Options.FileAssociations.Split([',', ';'], StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => x.Trim())
+                .Distinct()
+                .ToList();
+
+            if (fileAssociations.Count == 0)
+                return null;
+
+            var fileAssociationString = string.Join(",", fileAssociations);
+            Log.Debug($"Custom URL Protocols: { fileAssociationString } ");
+            return fileAssociationString;
+        } catch (Exception ex) {
+            throw new UserInfoException(
+                $"Invalid file associations '{Options.FileAssociations}'. " +
                 $"Error was {ex.Message}");
         }
     }

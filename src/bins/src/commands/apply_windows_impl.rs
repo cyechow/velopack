@@ -169,11 +169,8 @@ pub fn apply_package_impl(old_locator: &VelopackLocator, package: &PathBuf, run_
 
         if !old_locator.get_is_portable() {
             crate::windows::create_or_update_manifest_lnks(&new_locator, Some(old_locator));
-        }
-
-        // update custom url protocols
-        if !old_locator.get_is_portable() {
             let _ = crate::windows::registry::create_or_update_custom_protocols(&new_locator, Some(old_locator));
+            let _ = crate::windows::registry::create_or_update_file_associations(&new_locator, Some(old_locator));
         }
 
         // done!

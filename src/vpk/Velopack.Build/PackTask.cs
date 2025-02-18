@@ -95,6 +95,7 @@ public class PackTask : MSBuildAsyncTask
     public string? Compression { get; set; }
 
     public string? CustomUrlProtocols { get; set; }
+    public string? FileAssociations { get; set; }
 
     protected override async Task<bool> ExecuteAsync(CancellationToken cancellationToken)
     {

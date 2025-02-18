@@ -57,6 +57,9 @@ public abstract class PackCommand : PlatformCommand
 
     protected CliOption<string> CustomUrlProtocolsOption { get; private set; }
 
+    public string FileAssociations { get; private set; }
+    protected CliOption<string> FileAssociationsOption { get; private set; }
+
     public PackCommand(string name, string description, RuntimeOs targetOs = RuntimeOs.Unknown)
         : base(name, description, targetOs)
     {
@@ -119,6 +122,9 @@ public abstract class PackCommand : PlatformCommand
 
         CustomUrlProtocolsOption = AddOption<string>((v) => CustomUrlProtocols = v, "--customUrlProtocols")
             .SetDescription("Custom protocol names to register for the application.");
+
+        FileAssociationsOption = AddOption<string>((v) => FileAssociations = v, "--fileAssoc")
+            .SetDescription("File extensions to associate with the application.");
 
         this.AreMutuallyExclusive(NoPortableOption, NoInstOption);
     }

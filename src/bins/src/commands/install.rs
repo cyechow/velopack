@@ -191,6 +191,14 @@ fn install_impl(pkg: &mut BundleZip, locator: &VelopackLocator, tx: &std::sync::
         windows::registry::create_or_update_custom_protocols(&locator, None)?;
     }
 
+    if !locator.get_file_associations().is_empty() {
+        info!("Registering as default program...");
+        windows::registry::register_default_program(&locator)?;
+
+        info!("Registering file associations...");
+        windows::registry::create_or_update_file_associations(&locator, None)?;
+    }
+
     info!("Starting process install hook");
     if !windows::run_hook(&locator, constants::HOOK_CLI_INSTALL, 30) {
         let setup_name = format!("{} Setup {}", locator.get_manifest_title(), locator.get_manifest_id());

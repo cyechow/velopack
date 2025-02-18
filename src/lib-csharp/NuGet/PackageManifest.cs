@@ -29,6 +29,7 @@ namespace Velopack.NuGet
         public string? Copyright { get; private set; }
         public string? ShortcutAmuid { get; private set; }
         public IEnumerable<string> CustomUrlProtocols { get; private set; } = Enumerable.Empty<string>();
+        public IEnumerable<string> FileAssociations { get; private set; } = Enumerable.Empty<string>();
         public IEnumerable<string> ShortcutLocations { get; private set; } = Enumerable.Empty<string>();
         public IEnumerable<string> Authors { get; private set; } = Enumerable.Empty<string>();
         public IEnumerable<string> RuntimeDependencies { get; private set; } = Enumerable.Empty<string>();
@@ -48,10 +49,13 @@ namespace Velopack.NuGet
 
         public static bool TryParseFromFile(string filePath, out PackageManifest manifest)
         {
-            try {
+            try
+            {
                 manifest = ParseFromFile(filePath);
                 return true;
-            } catch {
+            }
+            catch
+            {
                 manifest = null!;
                 return false;
             }
@@ -66,9 +70,11 @@ namespace Velopack.NuGet
             var allElements = new HashSet<string>();
 
             XNode? node = metadataElement.FirstNode;
-            while (node != null) {
+            while (node != null)
+            {
                 var element = node as XElement;
-                if (element != null) {
+                if (element != null)
+                {
                     ReadMetadataValue(element, allElements);
                 }
                 node = node.NextNode;
@@ -77,7 +83,8 @@ namespace Velopack.NuGet
 
         private void ReadMetadataValue(XElement element, HashSet<string> allElements)
         {
-            if (element.Value == null) {
+            if (element.Value == null)
+            {
                 return;
             }
 
@@ -90,65 +97,69 @@ namespace Velopack.NuGet
             }
 
             string value = element.Value.SafeTrim();
-            switch (element.Name.LocalName) {
-            case "id":
-                Id = value;
-                break;
-            case "version":
-                Version = NuGetVersion.Parse(value);
-                break;
-            case "authors":
-                Authors = getCommaDelimitedValue(value);
-                break;
-            case "owners":
-                Owners = value;
-                break;
-            case "projectUrl":
-                ProjectUrl = new Uri(value);
-                break;
-            case "iconUrl":
-                IconUrl = new Uri(value);
-                break;
-            case "description":
-                Description = value;
-                break;
-            case "summary":
-                Summary = value;
-                break;
-            case "releaseNotes":
-                ReleaseNotes = value;
-                break;
-            case "copyright":
-                Copyright = value;
-                break;
-            case "language":
-                Language = value;
-                break;
-            case "title":
-                Title = value;
-                break;
+            switch (element.Name.LocalName)
+            {
+                case "id":
+                    Id = value;
+                    break;
+                case "version":
+                    Version = NuGetVersion.Parse(value);
+                    break;
+                case "authors":
+                    Authors = getCommaDelimitedValue(value);
+                    break;
+                case "owners":
+                    Owners = value;
+                    break;
+                case "projectUrl":
+                    ProjectUrl = new Uri(value);
+                    break;
+                case "iconUrl":
+                    IconUrl = new Uri(value);
+                    break;
+                case "description":
+                    Description = value;
+                    break;
+                case "summary":
+                    Summary = value;
+                    break;
+                case "releaseNotes":
+                    ReleaseNotes = value;
+                    break;
+                case "copyright":
+                    Copyright = value;
+                    break;
+                case "language":
+                    Language = value;
+                    break;
+                case "title":
+                    Title = value;
+                    break;
 
-            // ===
-            // the following metadata elements are added by velopack and are not
-            // used by nuget.
-            case "runtimeDependencies":
-                RuntimeDependencies = getCommaDelimitedValue(value);
-                break;
-            case "releaseNotesHtml":
-                ReleaseNotesHtml = value;
-                break;
-            case "channel":
-                Channel = value;
-                break;
-            case "shortcutLocations":
-                ShortcutLocations = getCommaDelimitedValue(value);
-                break;
-            case "shortcutAmuid":
-                ShortcutAmuid = value;
-                break;
-            case "customUrlProtocols":
-                CustomUrlProtocols = getCommaDelimitedValue(value);
-                break;
+                // ===
+                // the following metadata elements are added by velopack and are not
+                // used by nuget.
+                case "runtimeDependencies":
+                    RuntimeDependencies = getCommaDelimitedValue(value);
+                    break;
+                case "releaseNotesHtml":
+                    ReleaseNotesHtml = value;
+                    break;
+                case "channel":
+                    Channel = value;
+                    break;
+                case "shortcutLocations":
+                    ShortcutLocations = getCommaDelimitedValue(value);
+                    break;
+                case "shortcutAmuid":
+                    ShortcutAmuid = value;
+                    break;
+                case "customUrlProtocols":
+                    CustomUrlProtocols = getCommaDelimitedValue(value);
+                    break;
+                case "fileAssociations":
+                    FileAssociations = getCommaDelimitedValue(value);
+                    break;
             }
         }
 
