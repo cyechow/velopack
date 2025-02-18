@@ -44,6 +44,15 @@ pub fn register_default_program(locator: &VelopackLocator) -> Result<()> {
     Ok(())
 }
 
+pub fn unregister_default_program(locator: &VelopackLocator) -> Result<()> {
+    // Open registry key to Software/Classes, where the app's custom URL protocols will be stored:
+    let reg_software_classes_key =
+        w::HKEY::CURRENT_USER.RegCreateKeyEx(SOFTWARE_CLASSES_REGISTRY_KEY, None, co::REG_OPTION::NoValue, co::KEY::CREATE_SUB_KEY, None).map_err(|e| anyhow!("Failed to create/open registry key: {}", e))?.0;
+    let app_capability_path = get_application_capability_path(&locator)?;
+    reg_software_classes_key.RegDeleteTree(Some(&app_capability_path)).map_err(|e| anyhow!("Failed to delete default program application capabilities subtree: {}", e));
+    Ok(())
+}
+
 pub fn create_or_update_custom_protocols(next_app: &VelopackLocator, previous_app: Option<&VelopackLocator>) -> Result<()> {
     info!("Writing custom protocol registry keys...");
     let prev_custom_url_protocols = previous_app.map(|a| a.get_custom_url_protocols()).unwrap_or(Vec::<String>::new());
@@ -252,6 +261,18 @@ fn register_shell_open_command(reg_sub_key: &w::HKEY, app_path: &String) -> Resu
     // Set open command value value
     let app_shell_open_cmd = format!("\"{}\" \"%1\"", app_path);
     reg_open_command_key.RegSetKeyValue(None, Some(""), w::RegistryValue::Sz(app_shell_open_cmd.to_string())).map_err(|e| anyhow!("Failed to set shell open command app path {}: {}", &app_path, e))?;
+    Ok(())
+}
+
+pub fun remove_all_file_associations(locator: &VelopackLocator) -> Result<()> {
+    // Open registry key to Software/Classes, where the app's custom URL protocols will be stored:
+    let reg_software_classes_key =
+        w::HKEY::CURRENT_USER.RegCreateKeyEx(SOFTWARE_CLASSES_REGISTRY_KEY, None, co::REG_OPTION::NoValue, co::KEY::CREATE_SUB_KEY, None).map_err(|e| anyhow!("Failed to create/open registry key: {}", e))?.0;
+    let app_capability_path = get_application_capability_path(&locator)?;
+    reg_software_classes_key.RegDeleteTree(Some(&app_capability_path)).map_err(|e| anyhow!("Failed to delete default program application capabilities subtree: {}", e));
+
+    let file_associations = locator.get_file_associations();
+    let _ = remove_file_associations(&locator, &reg_software_classes_key, &file_associations);
     Ok(())
 }
 

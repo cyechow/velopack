@@ -40,6 +40,16 @@ pub fn uninstall(locator: &VelopackLocator, delete_self: bool) -> Result<()> {
             // finished_with_errors = true;
         }
 
+        if let Err(e) = windows::registry::remove_all_file_associations(&locator) {
+            error!("Unable to remove file associations ({}).", e);
+            // finished_with_errors = true;
+        }
+
+        if let Err(e) = windows::registry::unregister_default_program(&locator) {
+            error!("Unable to remove default program registration ({}).", e);
+            // finished_with_errors = true;
+        }
+
         !finished_with_errors
     }
 
